@@ -1,0 +1,284 @@
+\documentclass[a4paper]{article}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{blindtext} % Package to generate dummy text
+\usepackage{charter} % Use the Charter font
+\usepackage[utf8]{inputenc} % Use UTF-8 encoding
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage{amsthm, amsmath, amssymb} % Mathematical typesetting
+\usepackage{float} % Improved interface for floating objects
+\usepackage{hyperref} % For hyperlinks in the PDF
+\usepackage{graphicx, multicol} % Enhanced support for graphics
+\usepackage{xcolor} % Driver-independent color extensions
+\usepackage{pseudocode} % Environment for specifying algorithms in a natural way
+\usepackage{datetime} % Uses YEAR-MONTH-DAY format for dates
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+
+\addtolength{\hoffset}{-2.25cm}
+\addtolength{\textwidth}{4.5cm}
+\addtolength{\voffset}{-3.25cm}
+\addtolength{\textheight}{5cm}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0in}
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{}\renewcommand{\headrulewidth}{0pt} % Blank out the default header
+\fancyfoot[L]{} % Custom footer text
+\fancyfoot[C]{} % Custom footer text
+\fancyfoot[R]{\thepage} % Custom footer text
+\newcommand{\note}[1]{\marginpar{\scriptsize \textcolor{red}{#1}}} % Enables comments in red on margin
+
+%-------------------------------
+\newcommand{\exCount}{4} % Assignment title
+\newcommand{\deadline}{23.11.2025 23:59:59 (Aufgabe 1\&2) und 30.11.2025 23:59:59 (Aufgabe 3)} % Deadline
+\newcommand{\moodle}{https://moodle.hpi.de/course/view.php?id=1046}
+
+\begin{document}
+
+%-------------------------------
+% TITLE SECTION (do not modify unless you really need to)
+%-------------------------------
+\fancyhead[C]{}
+\hrule \medskip
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \raggedright
+    \large
+    Übung \exCount{}\\
+    \normalsize
+    Einführung in die Programmiertechnik I\\
+\end{minipage}
+\begin{minipage}{0.49\textwidth}
+    \raggedleft
+    \footnotesize
+    \textbf{Deadline}: \deadline{} \hfill\\
+    \url{\moodle}\\
+
+\end{minipage}
+\hfill
+\medskip\hrule
+\bigskip
+
+%-------------------------------
+% ASSIGNMENT CONTENT
+%-------------------------------
+
+\section*{Abgabe}
+Die Übungen werden in GitHub Classroom bearbeitet und via Moodle abgegeben. Insgesamt sind \textbf{maximal 35 Punkte} erreichbar.
+Bei der Abgabe via Moodle ist es wichtig, dass ihr \textbf{den Link zu eurem GitHub Repository} (aus dem URL/Suchfeld) in das Textfeld (Onlinetext) bei der Abgabe kopiert, damit wir eure Abgabe bewerten können.
+Der Link hat folgendes Format:
+\begin{verbatim}
+https://github.com/hpi-aiis-pt1-fall25/<übungsname>-<username>
+\end{verbatim}
+\vspace{2mm}
+
+Wichtig: die Bewertung erfolgt in einem \textit{Testatgespräch}, d.h. ihr müsst eure Lösungen in einem Termin mit einem Tutor oder einer Tutorin besprechen. Auschlaggebend für die Bewertung ist, dass ihr eure Lösungen erklären und Fragen dazu beantworten könnt!
+Wir werden den Stand des letzten Commit bewerten, der vor der jeweiligen Deadline abgegeben wurde.
+
+
+\vspace{2mm}
+\textbf{ACHTUNG:} Für diese Übung habt ihr \textbf{zwei Wochen bzw. drei Wochen} Zeit. Die Abgabe erfolgt am \deadline{}. \textbf{Der Umfang ist jedoch auch entsprechend größer. Wir empfehlen euch dringend, frühzeitig mit der Bearbeitung zu beginnen.}
+
+\vspace{2mm}
+\textbf{2er-Gruppen:} In dieser Übung könnt ihr in 2er-Gruppen (den Gruppen eurer Testatgespräche) arbeiten. In diesem Fall kann die Abgabe in einem eurer Repositories erfolgen. Wie immer muss jeder von euch in der Lage sein, die Lösung zu erklären und Fragen dazu zu beantworten. 
+
+\vspace{2mm}
+\textbf{MeMe -- Die Meme-Meisterschaft:} In langer Tradition der von unserem Lehrstuhl veranstalteten PT1-Vorlesungen gibt es auch dieses Jahr wieder die Meme-Meisterschaft. Teil dieser Übung ist es, dass ihr ein \textbf{eigenes} Meme mit HPI-, Studiums- oder Informatikbezug erstellt.
+Das beste Meme wird nach Abgabe der Übung von einer Jury gekürt und erhält einen Preis.
+In der Übungssession am 19.11 stellen wir die Regeln noch einmal vor. Ihr seid herzlich eingeladen auch nur zu diesem Teil der Übungssession zu kommen.
+Pro 2er-Gruppe kann nur ein Meme eingereicht werden, allerdings könnt ihr auch zwei Memes erstellen und mit eurem Tutor oder eurer Tutorin besprechen, welches Meme ihr einreicht.
+
+
+\section*{Aufgabe 1: Erstmal Einlesen - 10 Punkte (Deadline: 23.11.2025 23:59:59)}
+In dieser Übung sollt ihr ein Programm schreiben, dass ein gegebenes Meme in ASCII-Art konvertiert. Zuerst müssen wir jedoch die Bilddatei einlesen.
+Wir werden mit dem leicht lesbaren \href{https://en.wikipedia.org/wiki/Netpbm}{PPM} Format \texttt{P3} arbeiten. 
+
+\vspace{2mm}
+In der ersten Zeile steht \texttt{P3} als "magic string", um das Format zu identifizieren.
+In der zweiten Zeile stehen die Dimensionen des Bildes, also die Breite und Höhe in Pixeln (zuerst die Breite, dann die Höhe). 
+In der dritten Zeile steht der maximale Wert, den ein RGB-Wert annehmen kann. Da wir mit 8-Bit Farbtiefe arbeiten, ist dieser Wert 255.
+In den folgenden Zeilen stehen die RGB-Werte der einzelnen Pixel, wobei jeder Wert durch ein Leerzeichen getrennt ist. 
+Die Reihenfolge der Pixel ist von links nach rechts und von oben nach unten. 
+
+\vspace{2mm}
+Ein Beispiel für ein 5x3 (Breite x Höhe) Pixel Bild, das nur aus roten Pixeln besteht, sieht wie folgt aus:
+\begin{verbatim}
+P3
+5 3
+255
+255 0 0 255 0 0 255 0 0 255 0 0 255 0 0
+255 0 0 255 0 0 255 0 0 255 0 0 255 0 0
+255 0 0 255 0 0 255 0 0 255 0 0 255 0 0
+\end{verbatim}
+
+\textbf{Hinweis:} Beachtet, dass sich im PPM Format die Zeilenumbrüche nicht unbedingt nach der Dimension des Bildes richten müssen.
+Stattdessen kann z.B. auch alle 1024 Werte ein \texttt{\textbackslash{}n} eingefügt werden, ohne die Dimensionen des Bildes zu beachten.
+Wir haben für Aufgabe 2 ein Python-Skript geschrieben, das bei der Konvertierung zu PPM die Bilddimensionen beachtet, sodass jede Zeile in der PPM-Datei genau eine Zeile Pixel des Bildes enthält.
+Nutzt ihr jedoch andere Tools, müsst ihr die Informationen über Breite und Höhe aus der zweiten Zeile des PPM Formates nutzen, um die Datei korrekt einzulesen.
+
+\vspace{2mm}
+\textbf{Die Aufgabe:} Lest die \texttt{beispiel.ppm} Datei ein\footnote{In dem Programmrahmen ist das Einlesen von Dateien bzw. Schreiben in Dateien schon für euch vorgegeben.} und gebt die RGB-Werte der einzelnen Pixel zeilenweise auf der Kommandozeile aus.
+Um jedes RGB-Tripel sollen Klammern gesetzt werden, die einzelnen Werte sollen durch Leerzeichen getrennt werden.
+Jede Zeile in der Ausgabe soll einer Zeile im Bild entsprechen. Ein 5x3 (Breite x Höhe) Bild hat also 3 Zeilen in der Ausgabe, mit je 5 Tripeln für die RGB-Werte pro Pixel.
+Die Ausgabe soll also wie folgt aussehen:
+\begin{verbatim}
+(255 0 0) (255 0 0) (255 0 0) (255 0 0) (255 0 0)
+(255 0 0) (255 0 0) (255 0 0) (255 0 0) (255 0 0)
+(255 0 0) (255 0 0) (255 0 0) (255 0 0) (255 0 0)
+\end{verbatim}
+
+Ihr könnt eure Funktion auch an der \texttt{beispiel\_tricky.ppm} testen.
+Diese Datei enthält die gleichen Pixel wie \texttt{beispiel.ppm}, aber die Zeilenumbrüche sind anders gesetzt.
+Die Abgabe soll in der Datei \texttt{read\_ppm.c} erfolgen.
+Tipp: schaut euch den Inhalt von \texttt{beispiel.ppm} und vergleicht ihn mit der Ausgabe eures Programms. 
+
+
+\section*{Aufgabe 2: Memes mal anders - 15 Punkte (Deadline: 23.11.2025 23:59:59)}
+Nun kommen wir zum eigentlichen Teil der Übung: Das Konvertieren von Memes in ASCII-Art. 
+
+\subsection*{JPG zu PPM konvertieren}
+In der Regel werden Memes als JPG-Dateien geteilt.
+Falls eure Input-Datei kein JPG ist, könnt ihr \href{https://image.online-convert.com/convert-to-jpg}{Online-Tools} verwenden, um sie zu konvertieren. 
+Ihr habt verschiedene Möglichkeiten eure JPG-Dateien in das PPM-Format zu konvertieren.
+\begin{enumerate}
+    \item Ihr verwendet ein Python-Skript von uns, das eine JPG-Datei in PPM umwandelt.
+    Das Skript findet ihr im Repository unter \texttt{jpg2ppm.py}. 
+    Es kann wie folgt aufgerufen werden:
+    \begin{verbatim}
+        python jpg2ppm.py my_very_cool_meme.jpg
+    \end{verbatim}
+    und schreibt die RGB-Werte in eine Datei mit dem gleichen Namen, aber der Endung \texttt{.ppm}.
+    Im Beispiel ist die Outputdatei also \texttt{my\_very\_cool\_meme.ppm}. 
+    \textbf{Hinweis:} Bevor ihr das Skript ausführt, solltet ihr eine virtuelle Python-Umgebung erstellen und die notwendigen Pakete installieren. Siehe die Hinweise weiter unten.
+
+    \item Alternativ könnt ihr auch \href{https://imagemagick.org/script/download.php}{ImageMagick} verwenden, um die Bilder in PPM zu konvertieren.
+    Verwendet dafür folgenden Befehl:
+    \begin{verbatim}
+        convert my_very_cool_meme.jpg -compress none my_very_cool_meme.ppm
+    \end{verbatim}
+    \textbf{Hinweis:} ImageMagick schreibt die RGB-Werte nicht so, dass jede Zeile genau eine Zeile Pixel des Bildes enthält.
+    Stattdessen wird nach einer beliebigen festen Anzahl Werte (z.B. 1024) ein \texttt{\textbackslash{}n} eingefügt. Beachtet das bei der Implementierung, falls ihr ImageMagick verwendet. Eure Implementierung sollte also sowohl für \texttt{beispiel.ppm} als auch für \texttt{beispiel\_tricky.ppm} aus Aufgabe 1 funktionieren.
+    
+\end{enumerate}
+
+
+\vspace{2mm}
+
+\subsubsection*{Wie rufe ich ein Python-Skript auf?}
+Da wir einige zusätzliche Pakete benötigen, die nicht standardmäßig installiert sind, solltet ihr das Skript in einer virtuellen Umgebung ausführen.
+Am einfachsten geht das mit \href{https://docs.python.org/3/library/venv.html}{venv}.
+
+Bevor wir anfangen: \texttt{python -V} sollte \texttt{Python 3.x} ausgeben. Ist das bei euch nicht der Fall und ihr bekommt stattdessen \texttt{Python 2.x}, müsst ihr eventuell \texttt{python3} statt \texttt{python} verwenden.
+
+\vspace{2mm}
+Mit \texttt{python -m venv .venv} erstellt ihr eine neue virtuelle Umgebung im Ordner \texttt{.venv}. Diese könnt ihr mit \texttt{source .venv/bin/activate} aktivieren.
+\textbf{Für diese Terminal-Session} benutzt ihr nun die virtuelle Umgebung. Schließt ihr das Terminal, müsst ihr die Umgebung erneut mit \texttt{source .venv/bin/activate} aktivieren.
+Mit \texttt{which python} könnt ihr überprüfen, ob ihr die richtige Python-Installation verwendet. Die Ausgabe sollte \texttt{<...>/.venv/bin/python} sein.
+
+\vspace{2mm}
+Nun können wir in der virtuellen Umgebung unsere notwendigen Pakete installieren.
+Dazu verwenden wir \href{https://pypi.org/project/pip/}{pip}, das in Python 3.x standardmäßig installiert ist.
+\begin{verbatim}
+    pip install opencv-python tqdm numpy
+\end{verbatim}
+
+Nun ist die Installation der Pakete abgeschlossen und wir können das Skript ausführen!
+
+\vspace{2mm}
+\textbf{Hinweis:} Die Dateien im \texttt{.venv} sollen nicht in GitHub hochgeladen werden.
+
+
+
+\subsection*{Die ASCII-Konvertierung}
+Für ASCII-Art werden die RGB-Werte jedes einzelnen Pixels zusammengefasst und mit einem einzelnen ASCII-Zeichen dargestellt.
+Um ein gutes Ergebnis zu erzielen, sollten sehr helle Pixel (z.B. weiß) mit einem Leerzeichen dargestellt werden, während sehr dunkle Pixel (z.B. schwarz) mit einem ASCII-Zeichen mit hoher Dichte dargestellt werden.
+
+\vspace{2mm}
+Ihr solltet genügend verschiedene ASCII-Zeichen verwenden, z.B. (von dunkel nach hell):
+\begin{verbatim}
+  char asciiMap[10] = "@%#ox;:,. "
+\end{verbatim}
+
+\vspace{2mm}
+
+Euer C-Programm soll in der Datei \texttt{asciify\_meme.c} abgegeben werden und folgende Funktionalität haben:
+\begin{enumerate}
+    \item Das kompilierte Programm soll mit einem Argument aufgerufen werden, das den Dateinamen der Eingabedatei im PPM Format enthält.
+    Das kompilierte Programm soll also z.B. mit \texttt{./asciify\_meme my\_very\_cool\_meme.ppm} aufgerufen werden (hint: \texttt{argc} und \texttt{argv}).
+    \item Das Programm soll die Datei einlesen und die RGB-Werte in einem Array speichern. Die Höhe und Breite des Bildes sollen auf der Kommandozeile ausgegeben werden.
+    \item Das Programm soll die RGB-Werte in ASCII-Art konvertieren und das Ergebnis in der Datei \texttt{ascii\_meme.txt} speichern.
+\end{enumerate}
+
+
+\subsection*{MeMe: Die Meme-Meisterschaft}
+Teil dieser Übung ist es auch, dass ihr ein \textbf{eigenes} Meme mit HPI-, Studiums- oder Informatikbezug erstellt.
+Dieses Meme sollt ihr in ASCII-Art konvertieren und in die resultierende \texttt{ascii\_meme.txt} in eurem Repository speichern. 
+Außerdem sollt ihr auch das JPG-Original in euer Repository hochladen.
+
+\vspace{2mm}
+Da für jeden Pixel ein ASCII-Zeichen verwendet wird, kann die Ergebnisdatei sehr groß werden. Um das Ergebnis anzuschauen, könnt ihr die Datei z.B. in einem Browser oder VS Code öffnen und Zoom Out verwenden.
+Zusätzlich zu den Dateien sollt ihr auch einen \textbf{Screenshot} (so gut es geht herausgezoomed, um alles zu sehen) von dem ASCII-Meme in euer Repository hochladen. Diesen sollt ihr \texttt{screenshot\_ascii\_meme.png} oder \texttt{screenshot\_ascii\_meme.jpg} nennen.
+Ihr könnt den Screenshot auch auf mehrere Bilder aufteilen, falls das ASCII-Meme nicht auf ein Bild passt (fügt dann fortlaufende Nummern an die Dateinamen an).
+
+\vspace{2mm}
+Am Ende der Übung wird eine Jury das beste Meme küren. Kunibert konnte in einem seiner monatlichen Golfclub-Besuche die Unterstützung eines anonymen Potsdamer Mäzenen gewinnen. Neben Ruhm und Ehre wird es also auch einen Sachpreis geben. Beachtet bitte, dass wir die Memes eventuell in der Vorlesung zeigen werden. Ihr solltet den Inhalt eures Memes also also selbst verantworten können.
+Weitere Details und Fragen können wir in der Übungssession am 19.11. klären.
+
+
+\section*{Aufgabe 3: Mini-Memes - 10 Punkte (Deadline: 30.11.2025 23:59:59)}
+In dieser Aufgabe sollt ihr auf euer Programm aus Aufgabe 1 aufbauen und (in einer neuen Datei) ein Programm schreiben, das das Meme vor dem Konvertieren in ASCII-Art um einen beliebigen Faktor schrumpft.
+Für den Schrumpffaktor 2 würde ein 16x8 Pixel Bild zu einem 8x4 Pixel Bild schrumpfen. Hierbei sollen die RGB-Werte aller Pixel, die zu einem Pixel im verkleinerten Bild gehören, gemittelt werden.
+
+\vspace{2mm}
+Beim Schrumpfen kann es passieren, dass die Breite oder Höhe des Bildes nicht durch den Schrumpffaktor teilbar sind.
+In diesem Fall sollt ihr den übrigbleibenden Rest ignorieren.
+Beispiel: Bei einem 16x8 (Breite x Höhe) Bild mit einem Schrumpffaktor von 3 sind sowohl Breite als auch Höhe nicht durch den Schrumpffaktor teilbar.
+Es gilt \texttt{16 \% 3 = 1} und \texttt{8 \% 3 = 2}. Es werden also die letzte Spalte (da bei der Breite ein Rest von 1 anfällt) und die letzten beiden Zeilen (da bei der Höhe ein Rest von 2 anfällt) ignoriert.
+
+
+\vspace{2mm}
+In dieser Aufgabe sollt ihr auch die \textbf{geschrumpfte} Höhe und Breite des Bildes (als Ganzzahl ohne den Rest) zusätzlich zu den originalen Werte auf der Kommandozeile ausgeben. Im Beispiel mit einem 16x8 Bild und Schrumpffaktor 3 wäre die Ausgabe für die geschrumpften Werte also \texttt{Höhe: 5, Breite: 2}.
+
+\vspace{2mm}
+Der Schrumpffaktor soll via \texttt{scanf} eingelesen werden.
+Das Programm soll dann die Datei \texttt{ascii\_meme\_shrunk.txt} erstellen, die das geschrumpfte Meme in ASCII-Form enthält.
+Die Abgabe soll in der Datei \texttt{shrink\_meme.c} erfolgen.
+
+\vspace{2mm}
+Ihr sollt wieder die \texttt{ascii\_meme\_shrunk.txt} Datei in GitHub hochladen. Außerdem sollt ihr einen \textbf{Screenshot} von dem geschrumpften ASCII-Meme in euer Repository hochladen. Diesen sollt ihr\\ \texttt{screenshot\_shrunk\_ascii\_meme.png} oder \texttt{screenshot\_shrunk\_ascii\_meme.jpg} nennen.
+Hierfür könnt ihr einen beliebigen Schrumpffaktor verwenden.
+
+\paragraph*{Bonus - 1 Punkt} Falls ihr eine bessere Methode findet, um die RGB-Werte zu zusammenzufassen, könnt ihr einen Bonuspunkt erhalten. Beschreibt eure Methode und begründet, warum sie besser ist in einem Kommentar im Code und verwendet das Stichwort \texttt{BONUS-RGB-Schrumpfen}.
+
+\paragraph*{Bonus - 2 Punkte} Erweitert euer Programm so, dass es auch den Pfad zu einer JPG-Datei entgegennehmen kann. Das Programm soll dann das Python-Skript oder ImageMagick \textit{aus C heraus} aufrufen um die JPG-Datei nach PPM zu konvertieren und mit dem Ergebnis weiterarbeiten. Es soll aber weiterhin auch mit PPM Dateien als Eingabe funktionieren (hint: Dateiendung). Beschreibt eure Methode kurz in einem Kommentar im Code und verwendet das Stichwort \texttt{BONUS-Python-Skript}.
+
+\section*{Checkliste}
+Insgesamt solltet ihr folgende Dateien bearbeiten oder in euer Repository hochladen:
+
+\vspace{2mm}
+\textbf{Aufgabe 1}:
+\begin{itemize}
+    \item \texttt{read\_ppm.c}
+\end{itemize}
+\textbf{Aufgabe 2}:
+\begin{itemize}
+    \item \texttt{asciify\_meme.c}
+    \item \texttt{ascii\_meme.txt}
+    \item \texttt{screenshot\_ascii\_meme.png} oder \texttt{screenshot\_ascii\_meme.jpg} (oder \texttt{screenshot\_ascii\_meme1.png}, \texttt{screenshot\_ascii\_meme2.png}, ...)
+    \item \texttt{my\_very\_cool\_meme.jpg} (euer eigenes Meme mit beliebigem Dateinamen, wir müssen es aber finden können)
+    \item \texttt{my\_very\_cool\_meme.ppm} (das PPM-Format eures eigenen Memes)
+\end{itemize}
+\textbf{Aufgabe 3}:
+\begin{itemize}
+    \item \texttt{shrink\_meme.c}
+    \item \texttt{ascii\_meme\_shrunk.txt}
+    \item \texttt{screenshot\_shrunk\_ascii\_meme.png} oder \texttt{screenshot\_shrunk\_ascii\_meme.jpg}
+\end{itemize}
+\vspace{0.8cm}
+\textbf{Deadline}: \deadline{}, \textbf{Bearbeitung} in GitHub Classroom, \textbf{Abgabe} \href{\moodle}{via Moodle}.
+
+% \bibliographystyle{acm}
+% \bibliography{references} % citation records are in the references.bib document
+
+\end{document}
