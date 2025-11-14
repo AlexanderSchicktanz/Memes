@@ -16,7 +16,7 @@ int main(void)
     Dieser Programmrahmen ist nur zur Hilfe gedacht, er kann gerne geändert werden.
     */
 
-    char inputPPMPath[] = "beispiel_tricky.ppm";
+    char inputPPMPath[] = "test_meme.ppm";
     FILE *ppmFile = fopen(inputPPMPath, "r");
 
     if (ppmFile == NULL)
@@ -41,13 +41,11 @@ int main(void)
     Color* colors = (Color*)malloc(sizeof(Color)*width*height);
     Color currentCol = {0};
     int i = 0;
-    printf("Test1\n");
     while(fscanf(ppmFile,"%d %d %d",&currentCol.r, &currentCol.g, &currentCol.b)==3){
       colors[i]=currentCol;
       i++;
     }
     if(i<width*height) return 5;
-    printf("i: %d\nW*H: %d",i,(width*height));
     fclose(ppmFile);
 
     for(int j = 0; j < i; j++){
